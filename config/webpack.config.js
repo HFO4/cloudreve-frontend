@@ -34,7 +34,7 @@ const postcssNormalize = require('postcss-normalize');
 const appPackageJson = require(paths.appPackageJson);
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
-const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
+const shouldUseSourceMap = false;
 // Some apps do not need the benefits of saving a web request, so not inlining the chunk
 // makes for a smoother build process.
 const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
@@ -131,7 +131,7 @@ module.exports = function(webpackEnv) {
         {
           loader: require.resolve(preProcessor),
           options: {
-            sourceMap: true,
+            sourceMap: false,
           },
         }
       );
@@ -618,30 +618,6 @@ module.exports = function(webpackEnv) {
           filename: 'static/css/[name].[contenthash:8].css',
           chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
         }),
-      // Generate an asset manifest file with the following content:
-      // - "files" key: Mapping of all asset filenames to their corresponding
-      //   output file so that tools can pick it up without having to parse
-      //   `index.html`
-      // - "entrypoints" key: Array of files which are included in `index.html`,
-      //   can be used to reconstruct the HTML if necessary
-      new ManifestPlugin({
-        fileName: 'asset-manifest.json',
-        publicPath: publicPath,
-        generate: (seed, files, entrypoints) => {
-          const manifestFiles = files.reduce((manifest, file) => {
-            manifest[file.name] = file.path;
-            return manifest;
-          }, seed);
-          const entrypointFiles = entrypoints.main.filter(
-            fileName => !fileName.endsWith('.map')
-          );
-
-          return {
-            files: manifestFiles,
-            entrypoints: entrypointFiles,
-          };
-        },
-      }),
       // Moment.js is an extremely popular library that bundles large locale files
       // by default due to how Webpack interprets its code. This is a practical
       // solution that requires the user to opt into importing specific locales.
