@@ -417,20 +417,22 @@ class NavbarCompoment extends Component {
                                     </ListItemIcon>
                                     <ListItemText primary="我的分享" />
                                 </ListItem>
-                                <ListItem
-                                    button
-                                    key="离线下载"
-                                    onClick={() =>
-                                        this.props.history.push("/aria2?")
-                                    }
-                                >
-                                    <ListItemIcon>
-                                        <DownloadIcon
-                                            className={classes.iconFix}
-                                        />
-                                    </ListItemIcon>
-                                    <ListItemText primary="离线下载" />
-                                </ListItem>
+                                {user.group.allowRemoteDownload && (
+                                    <ListItem
+                                        button
+                                        key="离线下载"
+                                        onClick={() =>
+                                            this.props.history.push("/aria2?")
+                                        }
+                                    >
+                                        <ListItemIcon>
+                                            <DownloadIcon
+                                                className={classes.iconFix}
+                                            />
+                                        </ListItemIcon>
+                                        <ListItemText primary="离线下载" />
+                                    </ListItem>
+                                )}
                                 {user.group.webdav && (
                                     <ListItem
                                         button
